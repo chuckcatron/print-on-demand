@@ -10,14 +10,43 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const printful_module_1 = require("./printful/printful.module");
+const stripe_module_1 = require("./stripe/stripe.module");
+const config_1 = require("@nestjs/config");
+const authorization_module_1 = require("./authorization/authorization.module");
+const products_module_1 = require("./products/products.module");
+const typeorm_1 = require("@nestjs/typeorm");
+const product_entity_1 = require("./products/entities/product.entity");
+const orders_module_1 = require("./orders/orders.module");
+const cognito_config_1 = require("./config/cognito.config");
+const logger_service_1 = require("./logger.service");
+const order_entity_1 = require("./orders/entities/order.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [
+            typeorm_1.TypeOrmModule.forRoot({
+                type: 'postgres',
+                host: 'localhost',
+                port: 5432,
+                username: 'your_db_username',
+                password: 'your_db_password',
+                database: 'your_db_name',
+                entities: [order_entity_1.Order, product_entity_1.Product],
+                synchronize: true,
+            }),
+            config_1.ConfigModule.forRoot({ load: [cognito_config_1.default] }),
+            printful_module_1.PrintfulModule,
+            orders_module_1.OrdersModule,
+            stripe_module_1.StripeModule,
+            authorization_module_1.AuthorizationModule,
+            products_module_1.ProductsModule,
+            orders_module_1.OrdersModule,
+        ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, logger_service_1.CustomLoggerService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

@@ -1,0 +1,456 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "PrintOnDemand-IaC.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "PrintOnDemand-IaC.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "PrintOnDemand-IaC": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://777602709812/us-east-1",
+      "properties": {
+        "templateFile": "PrintOnDemand-IaC.template.json",
+        "terminationProtection": false,
+        "tags": {
+          "Environment": "Production",
+          "Project": "PrintOnDemand"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::777602709812:role/cdk-hnb659fds-deploy-role-777602709812-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::777602709812:role/cdk-hnb659fds-cfn-exec-role-777602709812-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-777602709812-us-east-1/36de0ba927bedd1f5d0768f335784dcd648a0dbd0a5646b8379d70361acf25cb.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "PrintOnDemand-IaC.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::777602709812:role/cdk-hnb659fds-lookup-role-777602709812-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "PrintOnDemand-IaC.assets"
+      ],
+      "metadata": {
+        "/PrintOnDemand-IaC": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Environment",
+                "Value": "Production"
+              },
+              {
+                "Key": "Project",
+                "Value": "PrintOnDemand"
+              }
+            ]
+          }
+        ],
+        "/PrintOnDemand-IaC/Bucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Bucket83908E77"
+          }
+        ],
+        "/PrintOnDemand-IaC/Bucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketPolicyE9A3008A"
+          }
+        ],
+        "/PrintOnDemand-IaC/OriginAccessIdentity/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OriginAccessIdentityDF1E3CAC"
+          }
+        ],
+        "/PrintOnDemand-IaC/Distribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Distribution830FAC52"
+          }
+        ],
+        "/PrintOnDemand-IaC/DeployWithInvalidation/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeployWithInvalidationAwsCliLayerDEDD5787"
+          }
+        ],
+        "/PrintOnDemand-IaC/DeployWithInvalidation/CustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeployWithInvalidationCustomResourceE3FF7455"
+          }
+        ],
+        "/PrintOnDemand-IaC/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ],
+        "/PrintOnDemand-IaC/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF"
+          }
+        ],
+        "/PrintOnDemand-IaC/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536"
+          }
+        ],
+        "/PrintOnDemand-IaC/SiteAliasRecord/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SiteAliasRecord3C0AF5BF"
+          }
+        ],
+        "/PrintOnDemand-IaC/AWSCloudFrontPartitionHostedZoneIdMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWSCloudFrontPartitionHostedZoneIdMap"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcF9F0CA6F"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet1Subnet60D1320D"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet1RouteTable00654ADB"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet1RouteTableAssociation2CCE9CDC"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet1DefaultRoute2D379878"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet1EIP5C2C4ED5"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet1NATGateway9744F529"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet2Subnet122ADB1B"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet2RouteTableC647F413"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet2RouteTableAssociation7AF8666E"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet2DefaultRouteAFC76296"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet2/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet2EIPF93892AD"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet2/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet2NATGateway883B336D"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet3/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet3SubnetA86B98CE"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet3/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet3RouteTableA66F75CE"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet3/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet3RouteTableAssociation311097D4"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet3/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet3DefaultRoute5DBA15FE"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet3/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet3EIP5A87D06F"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PublicSubnetSubnet3/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPublicSubnetSubnet3NATGateway020197EE"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet1SubnetE8BD536C"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet1RouteTableD918A34F"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet1RouteTableAssociation2811D7AF"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet1DefaultRoute58825934"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet2SubnetE3BFCF91"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet2RouteTable83C86AF7"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet2RouteTableAssociationE7A10A88"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet2DefaultRoute0FED656C"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet3/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet3SubnetC67F8C17"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet3/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet3RouteTableC3918735"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet3/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet3RouteTableAssociation2DDA8CC4"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/PrivateSubnetSubnet3/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcPrivateSubnetSubnet3DefaultRoute9D116386"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcIGW5C4A4F63"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcVPCGW488ACE0D"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyVpc/RestrictDefaultSecurityGroupCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyVpcRestrictDefaultSecurityGroupCustomResourceA4FCCD62"
+          }
+        ],
+        "/PrintOnDemand-IaC/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+          }
+        ],
+        "/PrintOnDemand-IaC/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
+          }
+        ],
+        "/PrintOnDemand-IaC/MyCluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyCluster4C1BA579"
+          }
+        ],
+        "/PrintOnDemand-IaC/TaskDef/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskDefTaskRole1EDB4A67"
+          }
+        ],
+        "/PrintOnDemand-IaC/TaskDef/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskDef54694570"
+          }
+        ],
+        "/PrintOnDemand-IaC/FargateService/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceAC2B3B85"
+          }
+        ],
+        "/PrintOnDemand-IaC/FargateService/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceSecurityGroup0A0E79CB"
+          }
+        ],
+        "/PrintOnDemand-IaC/UserPool/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPool6BA7E5F2"
+          }
+        ],
+        "/PrintOnDemand-IaC/UserPoolClient/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolClient2F5918F7"
+          }
+        ],
+        "/PrintOnDemand-IaC/IdentityPool": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IdentityPool"
+          }
+        ],
+        "/PrintOnDemand-IaC/CognitoDefaultAuthenticatedRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoDefaultAuthenticatedRoleC5D5C31E"
+          }
+        ],
+        "/PrintOnDemand-IaC/CognitoDefaultUnauthenticatedRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoDefaultUnauthenticatedRoleABBF7267"
+          }
+        ],
+        "/PrintOnDemand-IaC/IdentityPoolRoleAttachment": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IdentityPoolRoleAttachment"
+          }
+        ],
+        "/PrintOnDemand-IaC/UserPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolId"
+          }
+        ],
+        "/PrintOnDemand-IaC/UserPoolClientId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolClientId"
+          }
+        ],
+        "/PrintOnDemand-IaC/IdentityPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IdentityPoolId"
+          }
+        ],
+        "/PrintOnDemand-IaC/DistributionDomainName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DistributionDomainName"
+          }
+        ],
+        "/PrintOnDemand-IaC/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/PrintOnDemand-IaC/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/PrintOnDemand-IaC/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "PrintOnDemand-IaC"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

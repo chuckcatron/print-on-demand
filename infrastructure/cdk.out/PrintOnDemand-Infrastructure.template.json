@@ -1,0 +1,1680 @@
+{
+ "Resources": {
+  "SiteBucket397A1860": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:cr-owned:e0b8608f",
+      "Value": "true"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "WebsiteConfiguration": {
+     "IndexDocument": "index.html"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/SiteBucket/Resource"
+   }
+  },
+  "SiteBucketPolicy3AC1D0F8": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "SiteBucket397A1860"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:GetObject",
+       "Condition": {
+        "StringEquals": {
+         "AWS:SourceArn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:cloudfront::777602709812:distribution/",
+            {
+             "Ref": "SiteDistribution3FF9535D"
+            }
+           ]
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudfront.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "SiteBucket397A1860",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/SiteBucket/Policy/Resource"
+   }
+  },
+  "SiteDistribution3FF9535D": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "CustomErrorResponses": [
+      {
+       "ErrorCachingMinTTL": 1800,
+       "ErrorCode": 403,
+       "ResponseCode": 200,
+       "ResponsePagePath": "/index.html"
+      },
+      {
+       "ErrorCachingMinTTL": 1800,
+       "ErrorCode": 404,
+       "ResponseCode": 200,
+       "ResponsePagePath": "/index.html"
+      }
+     ],
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+      "Compress": true,
+      "TargetOriginId": "PrintOnDemandInfrastructureSiteDistributionOrigin1B7B3E1BA",
+      "ViewerProtocolPolicy": "allow-all"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "CustomOriginConfig": {
+        "OriginProtocolPolicy": "http-only",
+        "OriginSSLProtocols": [
+         "TLSv1.2"
+        ]
+       },
+       "DomainName": {
+        "Fn::Select": [
+         2,
+         {
+          "Fn::Split": [
+           "/",
+           {
+            "Fn::GetAtt": [
+             "SiteBucket397A1860",
+             "WebsiteURL"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "Id": "PrintOnDemandInfrastructureSiteDistributionOrigin1B7B3E1BA"
+      }
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/SiteDistribution/Resource"
+   }
+  },
+  "DeployWithInvalidationAwsCliLayerDEDD5787": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-777602709812-us-east-2",
+     "S3Key": "3322b7049fb0ed2b7cbb644a2ada8d1116ff80c32dca89e6ada846b5de26f961.zip"
+    },
+    "Description": "/opt/awscli/aws"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/DeployWithInvalidation/AwsCliLayer/Resource",
+    "aws:asset:path": "asset.3322b7049fb0ed2b7cbb644a2ada8d1116ff80c32dca89e6ada846b5de26f961.zip",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "DeployWithInvalidationCustomResourceE3FF7455": {
+   "Type": "Custom::CDKBucketDeployment",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536",
+      "Arn"
+     ]
+    },
+    "SourceBucketNames": [
+     "cdk-hnb659fds-assets-777602709812-us-east-2"
+    ],
+    "SourceObjectKeys": [
+     "e21633f2332c819f7edfab90793d02cea3b8ef1203662c387ee82d383adfe956.zip"
+    ],
+    "DestinationBucketName": {
+     "Ref": "SiteBucket397A1860"
+    },
+    "Prune": true,
+    "DistributionId": {
+     "Ref": "SiteDistribution3FF9535D"
+    },
+    "DistributionPaths": [
+     "/*"
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/DeployWithInvalidation/CustomResource/Default"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:s3:::cdk-hnb659fds-assets-777602709812-us-east-2",
+        "arn:aws:s3:::cdk-hnb659fds-assets-777602709812-us-east-2/*"
+       ]
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SiteBucket397A1860",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SiteBucket397A1860",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudfront:CreateInvalidation",
+        "cloudfront:GetInvalidation"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+    "Roles": [
+     {
+      "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-777602709812-us-east-2",
+     "S3Key": "2d56e153cac88d3e0c2f842e8e6f6783b8725bf91f95e0673b4725448a56e96d.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "AWS_CA_BUNDLE": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+     }
+    },
+    "Handler": "index.handler",
+    "Layers": [
+     {
+      "Ref": "DeployWithInvalidationAwsCliLayerDEDD5787"
+     }
+    ],
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource",
+    "aws:asset:path": "asset.2d56e153cac88d3e0c2f842e8e6f6783b8725bf91f95e0673b4725448a56e96d",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "SiteAliasRecord3C0AF5BF": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "SiteDistribution3FF9535D",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z04385762ZGXPV32LRLV2",
+    "Name": "print.thechuckgroup.com.",
+    "Type": "A"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/SiteAliasRecord/Resource"
+   }
+  },
+  "MyVpcF9F0CA6F": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.1.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/Resource"
+   }
+  },
+  "MyVpcPublicSubnetSubnet1Subnet60D1320D": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-2a",
+    "CidrBlock": "10.1.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "PublicSubnet"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1/Subnet"
+   }
+  },
+  "MyVpcPublicSubnetSubnet1RouteTable00654ADB": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1/RouteTable"
+   }
+  },
+  "MyVpcPublicSubnetSubnet1RouteTableAssociation2CCE9CDC": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MyVpcPublicSubnetSubnet1RouteTable00654ADB"
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPublicSubnetSubnet1Subnet60D1320D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1/RouteTableAssociation"
+   }
+  },
+  "MyVpcPublicSubnetSubnet1DefaultRoute2D379878": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "MyVpcIGW5C4A4F63"
+    },
+    "RouteTableId": {
+     "Ref": "MyVpcPublicSubnetSubnet1RouteTable00654ADB"
+    }
+   },
+   "DependsOn": [
+    "MyVpcVPCGW488ACE0D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1/DefaultRoute"
+   }
+  },
+  "MyVpcPublicSubnetSubnet1EIP5C2C4ED5": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1/EIP"
+   }
+  },
+  "MyVpcPublicSubnetSubnet1NATGateway9744F529": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "MyVpcPublicSubnetSubnet1EIP5C2C4ED5",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPublicSubnetSubnet1Subnet60D1320D"
+    },
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "DependsOn": [
+    "MyVpcPublicSubnetSubnet1DefaultRoute2D379878",
+    "MyVpcPublicSubnetSubnet1RouteTableAssociation2CCE9CDC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet1/NATGateway"
+   }
+  },
+  "MyVpcPublicSubnetSubnet2Subnet122ADB1B": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-2b",
+    "CidrBlock": "10.1.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "PublicSubnet"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2/Subnet"
+   }
+  },
+  "MyVpcPublicSubnetSubnet2RouteTableC647F413": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2/RouteTable"
+   }
+  },
+  "MyVpcPublicSubnetSubnet2RouteTableAssociation7AF8666E": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MyVpcPublicSubnetSubnet2RouteTableC647F413"
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPublicSubnetSubnet2Subnet122ADB1B"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2/RouteTableAssociation"
+   }
+  },
+  "MyVpcPublicSubnetSubnet2DefaultRouteAFC76296": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "MyVpcIGW5C4A4F63"
+    },
+    "RouteTableId": {
+     "Ref": "MyVpcPublicSubnetSubnet2RouteTableC647F413"
+    }
+   },
+   "DependsOn": [
+    "MyVpcVPCGW488ACE0D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2/DefaultRoute"
+   }
+  },
+  "MyVpcPublicSubnetSubnet2EIPF93892AD": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2/EIP"
+   }
+  },
+  "MyVpcPublicSubnetSubnet2NATGateway883B336D": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "MyVpcPublicSubnetSubnet2EIPF93892AD",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPublicSubnetSubnet2Subnet122ADB1B"
+    },
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "DependsOn": [
+    "MyVpcPublicSubnetSubnet2DefaultRouteAFC76296",
+    "MyVpcPublicSubnetSubnet2RouteTableAssociation7AF8666E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet2/NATGateway"
+   }
+  },
+  "MyVpcPublicSubnetSubnet3SubnetA86B98CE": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-2c",
+    "CidrBlock": "10.1.2.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "PublicSubnet"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3/Subnet"
+   }
+  },
+  "MyVpcPublicSubnetSubnet3RouteTableA66F75CE": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3/RouteTable"
+   }
+  },
+  "MyVpcPublicSubnetSubnet3RouteTableAssociation311097D4": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MyVpcPublicSubnetSubnet3RouteTableA66F75CE"
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPublicSubnetSubnet3SubnetA86B98CE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3/RouteTableAssociation"
+   }
+  },
+  "MyVpcPublicSubnetSubnet3DefaultRoute5DBA15FE": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "MyVpcIGW5C4A4F63"
+    },
+    "RouteTableId": {
+     "Ref": "MyVpcPublicSubnetSubnet3RouteTableA66F75CE"
+    }
+   },
+   "DependsOn": [
+    "MyVpcVPCGW488ACE0D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3/DefaultRoute"
+   }
+  },
+  "MyVpcPublicSubnetSubnet3EIP5A87D06F": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3/EIP"
+   }
+  },
+  "MyVpcPublicSubnetSubnet3NATGateway020197EE": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "MyVpcPublicSubnetSubnet3EIP5A87D06F",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPublicSubnetSubnet3SubnetA86B98CE"
+    },
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "DependsOn": [
+    "MyVpcPublicSubnetSubnet3DefaultRoute5DBA15FE",
+    "MyVpcPublicSubnetSubnet3RouteTableAssociation311097D4"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PublicSubnetSubnet3/NATGateway"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet1SubnetE8BD536C": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-2a",
+    "CidrBlock": "10.1.3.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "PrivateSubnet"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet1/Subnet"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet1RouteTableD918A34F": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet1"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet1/RouteTable"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet1RouteTableAssociation2811D7AF": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MyVpcPrivateSubnetSubnet1RouteTableD918A34F"
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPrivateSubnetSubnet1SubnetE8BD536C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet1/RouteTableAssociation"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet1DefaultRoute58825934": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "MyVpcPublicSubnetSubnet1NATGateway9744F529"
+    },
+    "RouteTableId": {
+     "Ref": "MyVpcPrivateSubnetSubnet1RouteTableD918A34F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet1/DefaultRoute"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet2SubnetE3BFCF91": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-2b",
+    "CidrBlock": "10.1.4.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "PrivateSubnet"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet2/Subnet"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet2RouteTable83C86AF7": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet2"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet2/RouteTable"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet2RouteTableAssociationE7A10A88": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MyVpcPrivateSubnetSubnet2RouteTable83C86AF7"
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPrivateSubnetSubnet2SubnetE3BFCF91"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet2/RouteTableAssociation"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet2DefaultRoute0FED656C": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "MyVpcPublicSubnetSubnet2NATGateway883B336D"
+    },
+    "RouteTableId": {
+     "Ref": "MyVpcPrivateSubnetSubnet2RouteTable83C86AF7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet2/DefaultRoute"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet3SubnetC67F8C17": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-2c",
+    "CidrBlock": "10.1.5.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "PrivateSubnet"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet3"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet3/Subnet"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet3RouteTableC3918735": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet3"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet3/RouteTable"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet3RouteTableAssociation2DDA8CC4": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MyVpcPrivateSubnetSubnet3RouteTableC3918735"
+    },
+    "SubnetId": {
+     "Ref": "MyVpcPrivateSubnetSubnet3SubnetC67F8C17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet3/RouteTableAssociation"
+   }
+  },
+  "MyVpcPrivateSubnetSubnet3DefaultRoute9D116386": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "MyVpcPublicSubnetSubnet3NATGateway020197EE"
+    },
+    "RouteTableId": {
+     "Ref": "MyVpcPrivateSubnetSubnet3RouteTableC3918735"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/PrivateSubnetSubnet3/DefaultRoute"
+   }
+  },
+  "MyVpcIGW5C4A4F63": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Name",
+      "Value": "PrintOnDemand-Infrastructure/MyVpc"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/IGW"
+   }
+  },
+  "MyVpcVPCGW488ACE0D": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "MyVpcIGW5C4A4F63"
+    },
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/VPCGW"
+   }
+  },
+  "MyVpcRestrictDefaultSecurityGroupCustomResourceA4FCCD62": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "MyVpcF9F0CA6F",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "777602709812"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpc/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-2:777602709812:security-group/",
+             {
+              "Fn::GetAtt": [
+               "MyVpcF9F0CA6F",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-777602709812-us-east-2",
+     "S3Key": "ee7de53d64cc9d6248fa6aa550f92358f6c907b5efd6f3298aeab1b5e7ea358a.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.ee7de53d64cc9d6248fa6aa550f92358f6c907b5efd6f3298aeab1b5e7ea358a",
+    "aws:asset:property": "Code"
+   }
+  },
+  "MyCluster4C1BA579": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyCluster/Resource"
+   }
+  },
+  "TaskDefTaskRole1EDB4A67": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/TaskDef/TaskRole/Resource"
+   }
+  },
+  "TaskDef54694570": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Essential": true,
+      "Image": "amazon/amazon-ecs-sample",
+      "Memory": 512,
+      "Name": "web",
+      "PortMappings": [
+       {
+        "ContainerPort": 80,
+        "Protocol": "tcp"
+       }
+      ]
+     }
+    ],
+    "Cpu": "256",
+    "Family": "PrintOnDemandInfrastructureTaskDefA3EAC45F",
+    "Memory": "512",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "TaskDefTaskRole1EDB4A67",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/TaskDef/Resource"
+   }
+  },
+  "FargateServiceAC2B3B85": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "MyCluster4C1BA579"
+    },
+    "DeploymentConfiguration": {
+     "Alarms": {
+      "AlarmNames": [],
+      "Enable": false,
+      "Rollback": false
+     },
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 50
+    },
+    "DesiredCount": 1,
+    "EnableECSManagedTags": false,
+    "LaunchType": "FARGATE",
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Fn::GetAtt": [
+         "FargateServiceSecurityGroup0A0E79CB",
+         "GroupId"
+        ]
+       }
+      ],
+      "Subnets": [
+       {
+        "Ref": "MyVpcPrivateSubnetSubnet1SubnetE8BD536C"
+       },
+       {
+        "Ref": "MyVpcPrivateSubnetSubnet2SubnetE3BFCF91"
+       },
+       {
+        "Ref": "MyVpcPrivateSubnetSubnet3SubnetC67F8C17"
+       }
+      ]
+     }
+    },
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "TaskDefinition": {
+     "Ref": "TaskDef54694570"
+    }
+   },
+   "DependsOn": [
+    "TaskDefTaskRole1EDB4A67"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/FargateService/Service"
+   }
+  },
+  "FargateServiceSecurityGroup0A0E79CB": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "PrintOnDemand-Infrastructure/FargateService/SecurityGroup",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "DependsOn": [
+    "TaskDefTaskRole1EDB4A67"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/FargateService/SecurityGroup/Resource"
+   }
+  },
+  "CustomVpcRestrictDefaultSGFunctionServiceRoleB9003914": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/CustomVpcRestrictDefaultSGFunction/ServiceRole/Resource"
+   }
+  },
+  "CustomVpcRestrictDefaultSGFunctionServiceRoleDefaultPolicy6619D922": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:DescribeSecurityGroups",
+        "ec2:RevokeSecurityGroupIngress"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CustomVpcRestrictDefaultSGFunctionServiceRoleDefaultPolicy6619D922",
+    "Roles": [
+     {
+      "Ref": "CustomVpcRestrictDefaultSGFunctionServiceRoleB9003914"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/CustomVpcRestrictDefaultSGFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CustomVpcRestrictDefaultSGFunction77A35776": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-777602709812-us-east-2",
+     "S3Key": "7b61e7065f85e40467693351c3cceb6a5fb38642d4c0547bfa79439883322e7e.zip"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGFunctionServiceRoleB9003914",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "PrintOnDemand"
+     }
+    ],
+    "Timeout": 300
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGFunctionServiceRoleDefaultPolicy6619D922",
+    "CustomVpcRestrictDefaultSGFunctionServiceRoleB9003914"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/CustomVpcRestrictDefaultSGFunction/Resource",
+    "aws:asset:path": "asset.7b61e7065f85e40467693351c3cceb6a5fb38642d4c0547bfa79439883322e7e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "MyVpcRestrictDefaultSecurityGroupCustomResource": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGFunction77A35776",
+      "Arn"
+     ]
+    },
+    "VpcId": {
+     "Ref": "MyVpcF9F0CA6F"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/MyVpcRestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/2WS227bMAyGn6X3itY42wOkzloU2MGIh9wGtMxkbGTJEKkEgeF3H2TlhO6KPz9R1C9RhZ5/nevnJzjxzLSHmaVGD7WAOSg48XbghR5eojmgqHLnLiqHylsy5zu+5Dl5AcZRGetjuwveiR5WxBKoiULepU2P+ah4sR1a7K0/d+hE5yarG1DAjMJ6mcKoLHRNC3ood+4HnDFsMHBqW5PbWxTvXqMz00E3Ue5ucFQEnR7W3mLCU7xfJqtRBR8Fvy30sFyj8aGdSidVJwtoCj1sepPwpipVFRtLpo6Ny091V+vU6A80+bTM72zJ7A3B1eO0kMT39yqFXyBvIHiCs6oCHUHw3vjdCQaHt4Ls5JItRcD8nd6uRhMDyfkt+NhPHh5BugrrobSRBUNavspXCHtINvmwwh05upr8TLwTIIfhgV321hiOZPLFsxyv09vaNLktnNhY0ssTl5amYappyLXAntxelZHFd2tkH0NudNOP8Cf0/f/lVfBHajGk35iqfkfpo4zK+Rb1B385Fs96Xuji6YOJZiE6oQ71Osd/CO6YkhsDAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "PrintOnDemand-Infrastructure/CDKMetadata/Default"
+   }
+  }
+ },
+ "Mappings": {
+  "AWSCloudFrontPartitionHostedZoneIdMap": {
+   "aws": {
+    "zoneId": "Z2FDTNDATAQYW2"
+   },
+   "aws-cn": {
+    "zoneId": "Z3RFFRIM2A3IF5"
+   }
+  }
+ },
+ "Outputs": {
+  "DistributionDomainName": {
+   "Value": {
+    "Fn::GetAtt": [
+     "SiteDistribution3FF9535D",
+     "DomainName"
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
