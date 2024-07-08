@@ -1,28 +1,90 @@
-// src/stripe/stripe.service.ts
-
-import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Stripe from 'stripe';
+import { lastValueFrom, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class StripeService {
-  private readonly stripe: Stripe;
+  private readonly baseUrl: string;
+  private readonly apiKey: string;
 
-  constructor(private readonly configService: ConfigService) {
-    this.stripe = new Stripe(
-      this.configService.get<string>('STRIPE_SECRET_KEY'),
-      {
-        apiVersion: '2024-06-20',
-      },
-    );
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {
+    this.baseUrl = 'https://api.stripe.com/v1';
+    this.apiKey = this.configService.get<string>('STRIPE_API_KEY');
   }
 
-  async createPaymentIntent(amount: number, currency: string) {
-    return this.stripe.paymentIntents.create({
-      amount,
-      currency,
-    });
+  async createCharge(
+    amount: number,
+    currency: string,
+    source: string,
+    description: string,
+  ): Promise<any> {
+    try {
+      const response = await lastValueFrom(
+        this.httpService
+          .post(
+            `${this.baseUrl}/charges`,
+            new URLSearchParams({
+              amount: amount.toString(),
+              currency,
+              source,
+              description,
+            }).toString(),
+            {
+              headers: {
+                Authorization: `Bearer ${this.apiKey}`,
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            },
+          )
+          .pipe(
+            map((response) => response.data),
+            catchError((error) => {
+              console.error('Error response from Stripe:', error.response.data);
+              return throwError(
+                new HttpException(error.response.data, HttpStatus.BAD_REQUEST),
+              );
+            }),
+          ),
+      );
+      return response;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
-  // Add more methods to interact with the Stripe API as needed
+  async createRefund(chargeId: string, amount?: number): Promise<any> {
+    try {
+      const params = new URLSearchParams({ charge: chargeId });
+      if (amount) {
+        params.append('amount', amount.toString());
+      }
+
+      const response = await lastValueFrom(
+        this.httpService
+          .post(`${this.baseUrl}/refunds`, params.toString(), {
+            headers: {
+              Authorization: `Bearer ${this.apiKey}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .pipe(
+            map((response) => response.data),
+            catchError((error) => {
+              console.error('Error response from Stripe:', error.response.data);
+              return throwError(
+                new HttpException(error.response.data, HttpStatus.BAD_REQUEST),
+              );
+            }),
+          ),
+      );
+      return response;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

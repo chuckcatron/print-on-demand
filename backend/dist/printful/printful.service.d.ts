@@ -1,12 +1,13 @@
 import { HttpService } from '@nestjs/axios';
-import { Observable } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
+import { CustomLoggerService } from 'src/logger.service';
 export declare class PrintfulService {
     private readonly httpService;
     private readonly configService;
-    private printfulApiKey;
-    private apiBaseUrl;
-    constructor(httpService: HttpService, configService: ConfigService);
-    getProducts(): Observable<any>;
-    createOrder(order: any): Observable<any>;
+    private readonly loggerService;
+    private readonly baseUrl;
+    private readonly apiKey;
+    private readonly storeNo;
+    constructor(httpService: HttpService, configService: ConfigService, loggerService: CustomLoggerService);
+    getProducts(): Promise<any>;
 }

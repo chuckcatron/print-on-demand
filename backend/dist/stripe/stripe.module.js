@@ -10,14 +10,17 @@ exports.StripeModule = void 0;
 const common_1 = require("@nestjs/common");
 const stripe_service_1 = require("./stripe.service");
 const config_1 = require("@nestjs/config");
+const stripe_controller_1 = require("./stripe.controller");
+const logger_service_1 = require("../logger.service");
+const axios_1 = require("@nestjs/axios");
 let StripeModule = class StripeModule {
 };
 exports.StripeModule = StripeModule;
 exports.StripeModule = StripeModule = __decorate([
     (0, common_1.Module)({
-        imports: [config_1.ConfigModule],
-        controllers: [],
-        providers: [stripe_service_1.StripeService],
+        imports: [config_1.ConfigModule, axios_1.HttpModule],
+        controllers: [stripe_controller_1.StripeController],
+        providers: [stripe_service_1.StripeService, logger_service_1.CustomLoggerService],
         exports: [stripe_service_1.StripeService],
     })
 ], StripeModule);

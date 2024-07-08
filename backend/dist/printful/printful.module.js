@@ -8,17 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrintfulModule = void 0;
 const common_1 = require("@nestjs/common");
-const printful_service_1 = require("./printful.service");
 const axios_1 = require("@nestjs/axios");
+const printful_service_1 = require("./printful.service");
 const config_1 = require("@nestjs/config");
+const printful_controller_1 = require("./printful.controller");
+const logger_service_1 = require("../logger.service");
 let PrintfulModule = class PrintfulModule {
 };
 exports.PrintfulModule = PrintfulModule;
 exports.PrintfulModule = PrintfulModule = __decorate([
     (0, common_1.Module)({
-        imports: [config_1.ConfigModule, axios_1.HttpModule],
-        providers: [printful_service_1.PrintfulService],
-        exports: [printful_service_1.PrintfulService],
+        imports: [axios_1.HttpModule, config_1.ConfigModule],
+        providers: [logger_service_1.CustomLoggerService, printful_service_1.PrintfulService],
+        controllers: [printful_controller_1.PrintfulController],
     })
 ], PrintfulModule);
 //# sourceMappingURL=printful.module.js.map

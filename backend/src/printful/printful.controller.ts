@@ -6,7 +6,7 @@ export class PrintfulController {
   constructor(private readonly printfulService: PrintfulService) {}
 
   @Get('products')
-  async getProducts() {
+  getProducts() {
     return this.printfulService.getProducts();
   }
 }

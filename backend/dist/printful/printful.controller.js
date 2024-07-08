@@ -16,7 +16,7 @@ let PrintfulController = class PrintfulController {
     constructor(printfulService) {
         this.printfulService = printfulService;
     }
-    async getProducts() {
+    getProducts() {
         return this.printfulService.getProducts();
     }
 };
@@ -25,7 +25,7 @@ __decorate([
     (0, common_1.Get)('products'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], PrintfulController.prototype, "getProducts", null);
 exports.PrintfulController = PrintfulController = __decorate([
     (0, common_1.Controller)('printful'),

@@ -1,34 +1,52 @@
-import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { lastValueFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { CustomLoggerService } from 'src/logger.service';
 
 @Injectable()
 export class PrintfulService {
-  private printfulApiKey: string;
-  private apiBaseUrl = 'https://api.printful.com';
+  private readonly baseUrl: string;
+  private readonly apiKey: string;
+  private readonly storeNo: string;
 
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    private readonly loggerService: CustomLoggerService,
   ) {
-    this.printfulApiKey = this.configService.get<string>('PRINTFUL_API_KEY');
+    this.baseUrl = 'https://api.printful.com';
+    this.apiKey = this.configService.get<string>('PRINTFUL_API_KEY');
+    this.storeNo = this.configService.get<string>('PRINTFUL_STORE_NO');
+    this.loggerService.log(`Printful API key: ${this.apiKey}`);
   }
 
-  getProducts(): Observable<any> {
-    return this.httpService
-      .get(`${this.apiBaseUrl}/store/products`, {
-        headers: { Authorization: `Bearer ${this.printfulApiKey}` },
-      })
-      .pipe(map((response) => response.data));
-  }
-
-  createOrder(order: any): Observable<any> {
-    return this.httpService
-      .post(`${this.apiBaseUrl}/orders`, order, {
-        headers: { Authorization: `Bearer ${this.printfulApiKey}` },
-      })
-      .pipe(map((response) => response.data));
+  async getProducts(): Promise<any> {
+    console.log('Sending request to Printful API');
+    try {
+      const response = await lastValueFrom(
+        this.httpService
+          .get(`${this.baseUrl}/store/products`, {
+            headers: {
+              Authorization: `Bearer ${this.apiKey}`,
+              'X-PF-Store-Id': this.storeNo, // Replace with your store ID
+            },
+          })
+          .pipe(
+            map((response) => response.data),
+            catchError((error) => {
+              console.error(
+                'Error response from Printful:',
+                error.response.data,
+              ); // Log error response
+              return throwError(error);
+            }),
+          ),
+      );
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 }
