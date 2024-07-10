@@ -13,12 +13,13 @@ const products_service_1 = require("./products.service");
 const products_controller_1 = require("./products.controller");
 const product_entity_1 = require("./entities/product.entity");
 const logger_service_1 = require("../logger.service");
+const printful_module_1 = require("../printful/printful.module");
 let ProductsModule = class ProductsModule {
 };
 exports.ProductsModule = ProductsModule;
 exports.ProductsModule = ProductsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([product_entity_1.Product])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([product_entity_1.Product]), printful_module_1.PrintfulModule],
         providers: [products_service_1.ProductsService, logger_service_1.CustomLoggerService],
         controllers: [products_controller_1.ProductsController],
         exports: [products_service_1.ProductsService],

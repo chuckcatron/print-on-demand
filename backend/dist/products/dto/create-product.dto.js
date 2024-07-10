@@ -16,18 +16,32 @@ class CreateProductDto {
 exports.CreateProductDto = CreateProductDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "externalId", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], CreateProductDto.prototype, "description", void 0);
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateProductDto.prototype, "variants", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], CreateProductDto.prototype, "price", void 0);
+], CreateProductDto.prototype, "synced", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsUrl)(),
     __metadata("design:type", String)
-], CreateProductDto.prototype, "imageUrl", void 0);
+], CreateProductDto.prototype, "thumbnailUrl", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", Boolean)
+], CreateProductDto.prototype, "isIgnored", void 0);
 //# sourceMappingURL=create-product.dto.js.map

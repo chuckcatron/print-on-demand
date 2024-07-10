@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { lastValueFrom, Observable, throwError } from 'rxjs';
+import { lastValueFrom, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CustomLoggerService } from 'src/logger.service';
 
@@ -34,7 +34,7 @@ export class PrintfulService {
             },
           })
           .pipe(
-            map((response) => response.data),
+            map((response) => response.data.result),
             catchError((error) => {
               console.error(
                 'Error response from Printful:',

@@ -13,10 +13,14 @@ import { Product } from './entities/product.entity';
 import { JwtAuthGuard } from '../authorization/jwt-auth.guard';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CustomLoggerService } from '../logger.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly loggerService: CustomLoggerService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -32,8 +36,7 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  @Post()
-  async create(@Body() createProductDto: CreateProductDto) {
+  async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
     console.log('Received create product request:', createProductDto); // Debugging line
     const product = await this.productsService.createProduct(createProductDto);
     console.log('Product created:', product); // Debugging line
@@ -45,7 +48,7 @@ export class ProductsController {
   updateProduct(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
-  ) {
+  ): Promise<Product> {
     const product = this.productsService.updateProduct(id, updateProductDto);
 
     return product;

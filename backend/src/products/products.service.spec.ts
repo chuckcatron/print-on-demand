@@ -3,6 +3,9 @@ import { ProductsService } from './products.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
+import { CustomLoggerService } from '../logger.service';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 
 describe('ProductsService', () => {
   let service: ProductsService;
@@ -11,6 +14,7 @@ describe('ProductsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        CustomLoggerService,
         ProductsService,
         {
           provide: getRepositoryToken(Product),
@@ -18,6 +22,7 @@ describe('ProductsService', () => {
             find: jest.fn().mockResolvedValue([]),
             findOne: jest.fn().mockResolvedValue({}),
             save: jest.fn().mockResolvedValue({}),
+            create: jest.fn().mockResolvedValue({}),
             update: jest.fn().mockResolvedValue({}),
             delete: jest.fn().mockResolvedValue({}),
           },
@@ -46,34 +51,52 @@ describe('ProductsService', () => {
   });
 
   it('should create a product', async () => {
-    const product = await service.createProduct({
+    const createProductDto: CreateProductDto = {
+      externalId: '1123546',
+      isIgnored: false,
+      synced: 1,
+      variants: 1,
       name: 'Test',
-      description: 'Test',
-      price: 10,
-      imageUrl: 'test.jpg',
-    } as Product);
-    expect(product).toEqual({});
-    expect(repository.save).toHaveBeenCalledWith({
-      name: 'Test',
-      description: 'Test',
-      price: 10,
-      imageUrl: 'test.jpg',
-    });
+      thumbnailUrl: 'test.jpg',
+    };
+
+    const savedProduct: Product = {
+      ...createProductDto,
+      price: 0,
+      description: '',
+      id: 1,
+    };
+
+    jest.spyOn(repository, 'create').mockImplementation(() => savedProduct);
+    jest.spyOn(repository, 'save').mockResolvedValue(savedProduct);
+
+    const product = await service.createProduct(createProductDto);
+
+    expect(product).toEqual(savedProduct);
+    expect(repository.save).toHaveBeenCalledWith(savedProduct);
   });
 
   it('should update a product', async () => {
     const product = await service.updateProduct(1, {
+      externalId: '123456789',
+      isIgnored: false,
+      synced: 1,
+      variants: 1,
       name: 'Test',
       description: 'Test',
       price: 10,
-      imageUrl: 'test.jpg',
-    } as Product);
+      thumbnailUrl: 'test.jpg',
+    } as UpdateProductDto);
     expect(product).toEqual({});
     expect(repository.update).toHaveBeenCalledWith(1, {
+      externalId: '123456789',
+      isIgnored: false,
+      synced: 1,
+      variants: 1,
       name: 'Test',
       description: 'Test',
       price: 10,
-      imageUrl: 'test.jpg',
+      thumbnailUrl: 'test.jpg',
     });
   });
 

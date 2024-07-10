@@ -36,7 +36,7 @@ let PrintfulService = class PrintfulService {
                     'X-PF-Store-Id': this.storeNo,
                 },
             })
-                .pipe((0, operators_1.map)((response) => response.data), (0, operators_1.catchError)((error) => {
+                .pipe((0, operators_1.map)((response) => response.data.result), (0, operators_1.catchError)((error) => {
                 console.error('Error response from Printful:', error.response.data);
                 return (0, rxjs_1.throwError)(error);
             })));

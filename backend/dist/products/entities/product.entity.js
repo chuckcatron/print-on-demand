@@ -19,21 +19,37 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "id", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ unique: true }),
+    __metadata("design:type", String)
+], Product.prototype, "externalId", void 0);
+__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Product.prototype, "name", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Product.prototype, "description", void 0);
-__decorate([
-    (0, typeorm_1.Column)('decimal'),
     __metadata("design:type", Number)
-], Product.prototype, "price", void 0);
+], Product.prototype, "variants", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Product.prototype, "synced", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Product.prototype, "imageUrl", void 0);
+], Product.prototype, "thumbnailUrl", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Boolean)
+], Product.prototype, "isIgnored", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: 0 }),
+    __metadata("design:type", Number)
+], Product.prototype, "price", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: '' }),
+    __metadata("design:type", String)
+], Product.prototype, "description", void 0);
 exports.Product = Product = __decorate([
     (0, typeorm_1.Entity)()
 ], Product);

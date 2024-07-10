@@ -8,6 +8,7 @@ import { CustomLoggerService } from 'src/logger.service';
 @Module({
   imports: [HttpModule, ConfigModule],
   providers: [CustomLoggerService, PrintfulService],
+  exports: [PrintfulService],
   controllers: [PrintfulController],
 })
 export class PrintfulModule {}

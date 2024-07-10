@@ -221,7 +221,7 @@
      "cdk-hnb659fds-assets-777602709812-us-east-1"
     ],
     "SourceObjectKeys": [
-     "e21633f2332c819f7edfab90793d02cea3b8ef1203662c387ee82d383adfe956.zip"
+     "ca1fe672b6e45a5339f77b581adcb3934d8ad21117044e189cdb4cc6cd34f122.zip"
     ],
     "DestinationBucketName": {
      "Ref": "Bucket83908E77"
@@ -1594,6 +1594,7 @@
     ],
     "ExplicitAuthFlows": [
      "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_USER_SRP_AUTH",
      "ALLOW_REFRESH_TOKEN_AUTH"
     ],
     "GenerateSecret": false,

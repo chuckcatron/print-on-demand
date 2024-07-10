@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { ProductsService } from '../products/products.service';
+import { CustomLoggerService } from '../logger.service';
 
 describe('OrdersService', () => {
   let service: OrdersService;
@@ -13,6 +14,7 @@ describe('OrdersService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        CustomLoggerService,
         OrdersService,
         {
           provide: getRepositoryToken(Order),

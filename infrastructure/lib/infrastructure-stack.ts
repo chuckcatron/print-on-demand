@@ -11,6 +11,7 @@ import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
+
 export class InfrastructureStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -120,6 +121,7 @@ export class InfrastructureStack extends cdk.Stack {
       desiredCount: 1,
     });
 
+    // Cognito User Pool
     const userPool = new cognito.UserPool(this, 'UserPool', {
       userPoolName: 'print-on-demand-user-pool',
       selfSignUpEnabled: true,
@@ -139,6 +141,7 @@ export class InfrastructureStack extends cdk.Stack {
       userPool,
       generateSecret: false,
       authFlows: {
+        userSrp: true,
         userPassword: true,
       },
     });

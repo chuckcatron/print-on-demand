@@ -20,6 +20,7 @@ exports.PrintfulModule = PrintfulModule = __decorate([
     (0, common_1.Module)({
         imports: [axios_1.HttpModule, config_1.ConfigModule],
         providers: [logger_service_1.CustomLoggerService, printful_service_1.PrintfulService],
+        exports: [printful_service_1.PrintfulService],
         controllers: [printful_controller_1.PrintfulController],
     })
 ], PrintfulModule);

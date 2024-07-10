@@ -18,9 +18,11 @@ const products_service_1 = require("./products.service");
 const jwt_auth_guard_1 = require("../authorization/jwt-auth.guard");
 const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
+const logger_service_1 = require("../logger.service");
 let ProductsController = class ProductsController {
-    constructor(productsService) {
+    constructor(productsService, loggerService) {
         this.productsService = productsService;
+        this.loggerService = loggerService;
     }
     getAllProducts() {
         return this.productsService.getAllProducts();
@@ -61,7 +63,6 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
-    (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_product_dto_1.CreateProductDto]),
@@ -74,7 +75,7 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, update_product_dto_1.UpdateProductDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "updateProduct", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -86,6 +87,7 @@ __decorate([
 ], ProductsController.prototype, "deleteProduct", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),
-    __metadata("design:paramtypes", [products_service_1.ProductsService])
+    __metadata("design:paramtypes", [products_service_1.ProductsService,
+        logger_service_1.CustomLoggerService])
 ], ProductsController);
 //# sourceMappingURL=products.controller.js.map

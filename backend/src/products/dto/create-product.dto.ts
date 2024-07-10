@@ -1,12 +1,27 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsUrl } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
-  readonly name: string;
-  @IsOptional()
-  readonly description: string;
+  @IsString()
+  externalId: string;
+
   @IsNotEmpty()
-  readonly price: number;
-  @IsOptional()
-  readonly imageUrl: string;
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  variants: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  synced: number;
+
+  @IsNotEmpty()
+  @IsUrl()
+  thumbnailUrl: string;
+
+  @IsNotEmpty()
+  @IsString()
+  isIgnored: boolean;
 }

@@ -21,6 +21,9 @@ const orders_module_1 = require("./orders/orders.module");
 const cognito_config_1 = require("./config/cognito.config");
 const logger_service_1 = require("./logger.service");
 const order_entity_1 = require("./orders/entities/order.entity");
+const users_module_1 = require("./users/users.module");
+const user_entity_1 = require("./users/entities/user.entity");
+const admin_module_1 = require("./admin/admin.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,16 +37,19 @@ exports.AppModule = AppModule = __decorate([
                 username: 'your_db_username',
                 password: 'your_db_password',
                 database: 'your_db_name',
-                entities: [order_entity_1.Order, product_entity_1.Product],
+                entities: [order_entity_1.Order, product_entity_1.Product, user_entity_1.User],
                 synchronize: true,
             }),
             config_1.ConfigModule.forRoot({ load: [cognito_config_1.default] }),
+            admin_module_1.AdminModule,
             printful_module_1.PrintfulModule,
             orders_module_1.OrdersModule,
             stripe_module_1.StripeModule,
             authorization_module_1.AuthorizationModule,
             products_module_1.ProductsModule,
             orders_module_1.OrdersModule,
+            users_module_1.UsersModule,
+            admin_module_1.AdminModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, logger_service_1.CustomLoggerService],

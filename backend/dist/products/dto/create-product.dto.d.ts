@@ -1,6 +1,8 @@
 export declare class CreateProductDto {
-    readonly name: string;
-    readonly description: string;
-    readonly price: number;
-    readonly imageUrl: string;
+    externalId: string;
+    name: string;
+    variants: number;
+    synced: number;
+    thumbnailUrl: string;
+    isIgnored: boolean;
 }
