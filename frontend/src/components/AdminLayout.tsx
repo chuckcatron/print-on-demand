@@ -67,12 +67,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = () => {
                 </a>
               </li>
               <li className='nav-item'>
-                <LogoutButton />
-              </li>
-              <li className='nav-item'>
                 <a className='nav-link' href='/'>
                   Back to Main Site
                 </a>
+              </li>
+              <li className='nav-item'>
+                <LogoutButton />
               </li>
             </ul>
           </div>

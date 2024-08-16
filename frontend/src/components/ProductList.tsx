@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { importProducts } from '../services/api';
+import * as api from '../services/api';
 
 interface Product {
   id: number;
@@ -26,8 +26,8 @@ const ProductList: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('/api/products');
-      setProducts(response.data);
+      const response = await api.getProducts();
+      setProducts(response);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
@@ -35,7 +35,7 @@ const ProductList: React.FC = () => {
 
   const handleImport = async () => {
     try {
-      await importProducts();
+      await api.importProducts();
       fetchProducts(); // Refresh the product list after import
     } catch (error) {
       console.error('Error importing products:', error);
@@ -48,7 +48,6 @@ const ProductList: React.FC = () => {
 
   return (
     <div className='container'>
-      <h2 className='my-4'>Products</h2>
       <button className='btn btn-primary mb-3' onClick={handleImport}>
         Import Products from Printful
       </button>
@@ -60,6 +59,7 @@ const ProductList: React.FC = () => {
               <div className='card-body'>
                 <h5 className='card-title'>{product.name}</h5>
                 <p className='card-text'>Price: ${product.price}</p>
+                <p className='card-text'>Description: {product.description}</p>
                 <button className='btn btn-primary' onClick={() => handleEdit(product.id)}>
                   Edit
                 </button>

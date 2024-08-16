@@ -28,22 +28,28 @@ export const getProductById = async (id: string): Promise<Product> => {
 };
 
 // Update a product
-export const updateProduct = async (id: string, productData: Product): Promise<Product> => {
-  const response = await axios.put(`${API_BASE_URL}/products/${id}`, productData);
+export const updateProduct = async (productData: Product): Promise<Product> => {
+  const { id, ...productWithoutId } = productData;
+  const token = await getToken();
+  const response = await axios.put(`${API_BASE_URL}/products/${id}`, productWithoutId, { headers: { Authorization: `Bearer ${token}` } });
   return response.data;
 };
 
 // Import products from Printful
 export const importProducts = async (): Promise<void> => {
-  const session = await getUserSession();
-  if (!session) {
-    throw new Error('No session found');
-  }
-
-  const token = session.getIdToken().getJwtToken();
+  const token = await getToken();
   await axios.get(`${API_BASE_URL}/products/import`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+};
+
+export const getToken = async (): Promise<string> => {
+  const session = await getUserSession();
+  if (!session) {
+    throw new Error('No session found');
+  }
+
+  return session.getIdToken().getJwtToken();
 };

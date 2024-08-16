@@ -53,9 +53,13 @@ export class ProductsController {
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    const product = this.productsService.updateProduct(id, updateProductDto);
+    try {
+      const product = this.productsService.updateProduct(id, updateProductDto);
 
-    return product;
+      return product;
+    } catch (error) {
+      this.loggerService.log(error.message);
+    }
   }
 
   @UseGuards(JwtAuthGuard)

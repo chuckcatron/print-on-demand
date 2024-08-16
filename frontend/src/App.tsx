@@ -13,6 +13,7 @@ import Layout from './components/Layout';
 import AdminLayout from './components/AdminLayout';
 import Login from './components/Login';
 import '@aws-amplify/ui-react/styles.css';
+import ProductEdit from './components/ProductEdit';
 
 const App: React.FC = () => {
   return (
@@ -36,6 +37,7 @@ const App: React.FC = () => {
           <Route path='users' element={<AdminUsers />} />
           <Route path='orders' element={<AdminOrders />} />
           <Route path='products' element={<AdminProducts />} />
+          <Route path='products/:id/edit' element={<ProductEdit />} /> {/* Add this route */}
         </Route>
       </Routes>
     </Router>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import * as api from '../services/api';
 
 interface Product {
   id: number;
@@ -26,8 +27,9 @@ const ProductEdit: React.FC = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`/api/products/${id}`);
-      setProduct(response.data);
+      if (!id) return;
+      const response = await api.getProductById(id);
+      setProduct(response);
     } catch (error) {
       console.error('Error fetching product:', error);
     }
@@ -35,8 +37,9 @@ const ProductEdit: React.FC = () => {
 
   const handleSave = async () => {
     try {
+      if (!id) return;
       if (product) {
-        await axios.put(`/api/products/${id}`, product);
+        await api.updateProduct(product);
         navigate('/admin/products');
       }
     } catch (error) {
