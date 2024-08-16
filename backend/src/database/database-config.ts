@@ -10,7 +10,7 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       host: 'MYSQL5046.site4now.net',
       port: 3306,
       username: 'a47ba2_print',
-      password: 'vbXkJenUDaZo7t-7',
+      password: '',
       database: 'db_a47ba2_print',
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: true,
