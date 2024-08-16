@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug CDK",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/infrastructure/node_modules/.bin/cdk",
+        "args": [
+          "synth"
+        ],
+        "cwd": "${workspaceFolder}/infrastructure",
+        "runtimeArgs": [
+          "--nolazy",
+          "-r",
+          "${workspaceFolder}/infrastructure/node_modules/ts-node/register"
+        ],
+        "outputCapture": "std",
+        "skipFiles": ["<node_internals>/**"],
+        "sourceMaps": true
+      }
+    ]
+  }
