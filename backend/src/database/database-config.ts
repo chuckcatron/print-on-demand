@@ -7,11 +7,11 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
     console.log('Here we are');
     return {
       type: 'mysql',
-      host: 'MYSQL5046.site4now.net',
+      host: process.env.DB_HOST,
       port: 3306,
-      username: 'a47ba2_print',
-      password: '',
-      database: 'db_a47ba2_print',
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: true,
     };
