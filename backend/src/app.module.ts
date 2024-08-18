@@ -22,7 +22,7 @@ import { DatabaseConfigService } from './database/database-config';
       useClass: DatabaseConfigService,
       inject: [],
     }),
-    ConfigModule.forRoot({ load: [cognitoConfig] }),
+    ConfigModule.forRoot({ isGlobal: true, load: [cognitoConfig] }),
     AdminModule,
     AppConfigModule,
     PrintfulModule,

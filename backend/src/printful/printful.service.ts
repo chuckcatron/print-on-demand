@@ -2,8 +2,8 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosResponse } from 'axios';
-import { lastValueFrom, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { lastValueFrom } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CustomLoggerService } from 'src/logger.service';
 
 @Injectable()
@@ -20,11 +20,11 @@ export class PrintfulService {
     this.baseUrl = 'https://api.printful.com';
     this.apiKey = this.configService.get<string>('PRINTFUL_API_KEY');
     this.storeNo = this.configService.get<string>('PRINTFUL_STORE_NO');
-    this.loggerService.log(`Printful API key: ${this.apiKey}`);
+    this.loggerService.debug(`Printful API key: ${this.apiKey}`);
   }
 
   async getProducts(): Promise<any> {
-    console.log('Sending request to Printful API');
+    this.loggerService.log('Sending request to Printful API');
     try {
       const observable = this.httpService
         .get(`${this.baseUrl}/store/products`, {

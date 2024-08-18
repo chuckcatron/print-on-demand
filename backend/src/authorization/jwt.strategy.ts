@@ -23,7 +23,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       }),
       algorithms: ['RS256'],
     });
-    this.loggerService.log(`${configService.get('COGNITO_USER_POOL_ID')}`);
+    this.loggerService.debug(
+      `Cognito User Pool Id: ${configService.get('COGNITO_USER_POOL_ID')}`,
+    );
   }
 
   async validate(payload: any) {

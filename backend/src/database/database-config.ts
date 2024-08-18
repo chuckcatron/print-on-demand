@@ -4,7 +4,6 @@ import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 @Injectable()
 export class DatabaseConfigService implements TypeOrmOptionsFactory {
   async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
-    console.log('Here we are');
     return {
       type: 'mysql',
       host: process.env.DB_HOST,
